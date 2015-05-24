@@ -2,16 +2,14 @@
 # -*- coding: utf-8 -*-
 ####################################################################################################
 
-import io
-import os
-import pprint
-import subprocess
-import sys
-import time
-
-####################################################################################################
-
-def TailFile(p_FileName, p_BufferSize=4096, p_Encoding='UTF8'):
+def TailFile(p_FileName, p_BufferSize=4096, p_Encoding='utf8'):
+    '''
+        Iterator used to read a file starting with the last line, and proceeding backwards.
+        
+        p_FileName    : the full path to the file to be read backwards
+        p_BufferSize  : the size of the file chunk to read into memory for processing
+        p_Encoding    : the encoding of the file, default is utf-8
+    '''
     l_Remaining = bytes()
     
     with open(p_FileName, 'rb') as l_File:        
