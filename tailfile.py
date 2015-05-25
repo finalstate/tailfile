@@ -6,7 +6,7 @@ import io
 
 ####################################################################################################
 
-def TailFile(p_FileName, p_BufferSize=4096, p_Encoding='utf8', p_Separator = '\n', p_KeepSeparator=True):
+def TailFile(p_FileName, p_BufferSize=8192, p_Encoding='utf8', p_Separator = '\n', p_KeepSeparator=True):
     '''
         Iterator used to read a file starting with the end, and proceeding backwards.
         
@@ -20,7 +20,7 @@ def TailFile(p_FileName, p_BufferSize=4096, p_Encoding='utf8', p_Separator = '\n
     l_Separator     = bytes(p_Separator, p_Encoding)
     l_KeepSeparator = l_Separator if p_KeepSeparator else b''
     
-    l_Fragments = [] # array of bytes
+    l_Fragment = bytearray()
     with open(p_FileName, 'rb') as l_File:        
         l_File.seek(0, io.SEEK_END)
         l_Blocks = l_File.tell() // p_BufferSize
@@ -31,18 +31,18 @@ def TailFile(p_FileName, p_BufferSize=4096, p_Encoding='utf8', p_Separator = '\n
             l_Blocks       -= 1
             
             if not l_Separator in l_BufferContent:
-                l_Fragments.append(l_BufferContent)
+                l_Fragment = l_BufferContent + l_Fragment
             
             else:
                 l_BufferFragments = l_BufferContent.split(l_Separator)
-                yield str(l_BufferFragments[-1] + b''.join(l_Fragments[::-1]) + l_KeepSeparator, p_Encoding)
+                yield str(l_BufferFragments[-1] + l_Fragment + l_KeepSeparator, p_Encoding)
                     
                 for l_BufferFragment in reversed(l_BufferFragments[1:-1]): 
                     yield str(l_BufferFragment + l_KeepSeparator, p_Encoding)
                 
-                l_Fragments = [l_BufferFragments[0]] 
+                l_Fragment = bytearray(l_BufferFragments[0])
             
-        yield str(b''.join(l_Fragments[::-1]), p_Encoding)
+        yield str(l_Fragment, p_Encoding)
 
 ####################################################################################################
 
@@ -52,7 +52,7 @@ if __name__ == '__main__':
     import time
 
     C_TestFileName   = 'tmp.txt'
-    C_TestBufferSize =  4096
+    C_TestBufferSize =  9182
     
     if len(sys.argv) != 2:
         print ('Usage: python3 tailfile.py <testfile>')
