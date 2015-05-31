@@ -6,7 +6,7 @@ import io
 
 ####################################################################################################
 
-def TailFile(p_FileName, p_BufferSize=8192, p_Encoding='utf8', p_Separator = '\n', p_KeepSeparator=True):
+def TailFile(p_FileName, p_BufferSize=io.DEFAULT_BUFFER_SIZE, p_Encoding='utf8', p_Separator = '\n', p_KeepSeparator=True):
     '''
         Iterator used to read a file starting with the end, and proceeding backwards.
         
@@ -89,4 +89,4 @@ if __name__ == '__main__':
                 print ('|'+l_Line+'|\n---\n|'+l_Copy+'|')
                 break
             
-#        os.remove(C_TestFileName)    
+        os.remove(C_TestFileName)    
